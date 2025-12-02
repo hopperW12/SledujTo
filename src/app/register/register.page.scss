@@ -1,0 +1,49 @@
+:host {
+  ion-content {
+    --background: var(--ion-color-light);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .auth-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100%;
+  }
+
+  .auth-card {
+    width: 100%;
+    max-width: 420px;
+  }
+
+  form {
+    margin-top: 16px;
+  }
+
+  ion-item {
+    --inner-padding-end: 0;
+  }
+
+  ion-button {
+    margin-top: 20px;
+  }
+
+  .auth-footer {
+    margin-top: 16px;
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+    align-items: center;
+    font-size: 0.9rem;
+  }
+
+  .link-button {
+    font-size: 0.9rem;
+    color: var(--ion-color-primary);
+  }
+
+  .link-row {
+    margin-top: 16px;
+  }
+}

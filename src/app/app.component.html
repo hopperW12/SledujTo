@@ -1,3 +1,23 @@
 <ion-app>
-  <ion-router-outlet></ion-router-outlet>
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>SledujTo</ion-title>
+      <ion-buttons slot="end">
+        <ng-container *ngIf="displayName$ | async as name; else loggedOut">
+          <ion-label class="user-name">{{ name }}</ion-label>
+          <ion-button (click)="logout()">
+            Odhlásit se
+          </ion-button>
+        </ng-container>
+        <ng-template #loggedOut>
+          <ion-button routerLink="/login">Přihlásit se</ion-button>
+          <ion-button routerLink="/register" fill="clear">Registrovat</ion-button>
+        </ng-template>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content>
+    <ion-router-outlet></ion-router-outlet>
+  </ion-content>
 </ion-app>

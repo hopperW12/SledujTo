@@ -1,0 +1,29 @@
+.page-wrapper {
+  // ...existing code...
+}
+
+.poster-thumb {
+  --size: 64px;
+}
+
+.poster-thumb ion-img,
+.poster-thumb img,
+.poster-placeholder {
+  width: 64px;
+  height: 96px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.poster-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #2c2c2c;
+  color: #aaa;
+  font-size: 24px;
+}
+
+.type-icon {
+  // ...existing code...
+}

@@ -1,0 +1,49 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>
+      Viděl jsem
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Viděl jsem</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <div class="page-wrapper">
+    <ng-container *ngIf="(seenItems$ | async) as items">
+      <div class="state" *ngIf="items.length === 0">
+        <ion-text>Zatím nemáš nic označené jako viděné.</ion-text>
+      </div>
+
+      <ion-list *ngIf="items.length > 0">
+        <ion-item *ngFor="let item of items">
+          <ion-thumbnail slot="start" *ngIf="item.posterPath" class="poster-thumb">
+            <ion-img
+              [src]="imageBaseUrl + item.posterPath"
+              [alt]="'Plakát ' + item.title"
+            ></ion-img>
+          </ion-thumbnail>
+
+          <ion-label>
+            <h2>{{ item.title }}</h2>
+            <p>
+              {{ item.type === 'movie' ? 'Film' : 'Seriál' }}
+              <span *ngIf="item.year"> • {{ item.year }}</span>
+            </p>
+            <p *ngIf="item.seenAt">Viděno: {{ item.seenAt | date: 'd.M. yyyy' }}</p>
+            <p *ngIf="item.overview" class="overview">
+              {{ item.overview }}
+            </p>
+          </ion-label>
+          <ion-button slot="end" fill="clear" color="danger" size="small" (click)="remove(item)">
+            Odebrat
+          </ion-button>
+        </ion-item>
+      </ion-list>
+    </ng-container>
+  </div>
+</ion-content>

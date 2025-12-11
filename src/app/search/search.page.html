@@ -1,0 +1,73 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>
+      Hledat
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Hledat</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <div class="page-wrapper">
+    <ion-searchbar
+      placeholder="Hledat film nebo seriál"
+      [debounce]="500"
+      (ionInput)="onSearchChange($event)"
+    ></ion-searchbar>
+
+    <div class="state" *ngIf="isSearching">
+      <ion-spinner></ion-spinner>
+    </div>
+
+    <div class="state" *ngIf="!isSearching && errorMessage">
+      <ion-text color="danger">{{ errorMessage }}</ion-text>
+    </div>
+
+    <div class="state" *ngIf="!isSearching && !errorMessage && results.length === 0 && query">
+      <ion-text>Nic nenalezeno.</ion-text>
+    </div>
+
+    <ion-list *ngIf="results.length > 0">
+      <ion-item *ngFor="let item of results">
+        <ion-thumbnail slot="start" class="poster-thumb">
+          <ng-container *ngIf="item.posterPath; else noPoster">
+            <ion-img
+              [src]="imageBaseUrl + item.posterPath"
+              alt="Plakát {{ item.title }}"
+            ></ion-img>
+          </ng-container>
+          <ng-template #noPoster>
+            <div class="poster-placeholder">
+              <ion-icon name="image-outline"></ion-icon>
+            </div>
+          </ng-template>
+        </ion-thumbnail>
+
+        <ion-label>
+          <h2>{{ item.title }}</h2>
+          <p>
+            {{ item.type === 'movie' ? 'Film' : 'Seriál' }}
+            <span *ngIf="item.year"> • {{ item.year }}</span>
+          </p>
+          <p *ngIf="item.overview">{{ item.overview }}</p>
+        </ion-label>
+        <ion-button
+          slot="end"
+          fill="outline"
+          size="small"
+          (click)="toggleSeen(item)"
+        >
+          <ng-container *ngIf="isSeen(item)">
+            <span style="color: #ffc107; margin-right: 4px;">★</span>
+          </ng-container>
+          Viděl jsem
+        </ion-button>
+      </ion-item>
+    </ion-list>
+  </div>
+</ion-content>

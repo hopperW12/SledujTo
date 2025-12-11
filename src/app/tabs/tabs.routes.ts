@@ -1,38 +1,31 @@
 import { Routes } from '@angular/router';
 import { TabsPage } from './tabs.page';
-import { AuthGuard } from '../guards/auth.guard';
 
 export const routes: Routes = [
   {
     path: 'tabs',
     component: TabsPage,
-    canActivate: [AuthGuard],
     children: [
       {
-        path: 'tab1',
+        path: 'search',
         loadComponent: () =>
-          import('../tab1/tab1.page').then((m) => m.Tab1Page),
+          import('../search/search.page').then((m) => m.SearchPage),
       },
       {
-        path: 'tab2',
+        path: 'seen',
         loadComponent: () =>
-          import('../tab2/tab2.page').then((m) => m.Tab2Page),
-      },
-      {
-        path: 'tab3',
-        loadComponent: () =>
-          import('../tab3/tab3.page').then((m) => m.Tab3Page),
+          import('../seen/seen.page').then((m) => m.SeenPage),
       },
       {
         path: '',
-        redirectTo: '/tabs/tab1',
+        redirectTo: '/tabs/search',
         pathMatch: 'full',
       },
     ],
   },
   {
     path: '',
-    redirectTo: '/tabs/tab1',
+    redirectTo: '/tabs/search',
     pathMatch: 'full',
   },
 ];

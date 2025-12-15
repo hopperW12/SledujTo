@@ -93,16 +93,4 @@ export class LoginPage {
       this.loading = false;
     }
   }
-
-  async googleSignIn() {
-    this.errorMessage = null;
-    try {
-      await this.auth.signInWithGoogle();
-      this.router.navigate(['/']);
-    } catch (e: any) {
-      const code = e?.code as string | undefined;
-      // Google login může mít jiné kódy, ale fallback zpráva stačí
-      this.errorMessage = this.mapFirebaseError(code) || e.message || 'Chyba při přihlášení přes Google.';
-    }
-  }
 }

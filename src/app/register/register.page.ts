@@ -100,8 +100,9 @@ export class RegisterPage {
       const cred = await this.auth.registerWithEmail(email!, password!);
       if (cred.user && displayName) {
         await updateProfile(cred.user, { displayName });
+        await this.auth.refreshCurrentUser();
+        this.auth.setCurrentUserDisplayName(displayName);
       }
-      // Po registraci automaticky přihlášeno -> přesměrujeme na hlavní stránku
       this.router.navigate(['/']);
     } catch (e: any) {
       const code = e?.code as string | undefined;

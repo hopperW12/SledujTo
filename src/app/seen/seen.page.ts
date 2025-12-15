@@ -22,8 +22,7 @@ import { environment } from '../../environments/environment';
     IonButton,
     IonText,
     IonThumbnail,
-    IonImg,
-    IonIcon,
+    IonImg
   ],
 })
 export class SeenPage {

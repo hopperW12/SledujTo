@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { Auth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, GoogleAuthProvider, signInWithPopup, authState, User } from '@angular/fire/auth';
-import { Observable } from 'rxjs';
+import { Auth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, authState, User } from '@angular/fire/auth';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
@@ -9,9 +9,19 @@ export class AuthService {
   private auth = inject(Auth);
   private router = inject(Router);
 
-  user$: Observable<User | null> = authState(this.auth) as Observable<User | null>;
+  private userSubject = new BehaviorSubject<User | null>(null);
+  user$: Observable<User | null> = this.userSubject.asObservable();
 
-  // Vrací jméno nebo email aktuálního uživatele jako string nebo null
+  private authLoadedSubject = new BehaviorSubject<boolean>(false);
+  authLoaded$ = this.authLoadedSubject.asObservable();
+
+  constructor() {
+    authState(this.auth).subscribe(user => {
+      this.userSubject.next(user as User | null);
+      this.authLoadedSubject.next(true);
+    });
+  }
+
   displayName$: Observable<string | null> = this.user$.pipe(
     map((u) => (u ? u.displayName || u.email || null : null))
   );
@@ -24,19 +34,24 @@ export class AuthService {
     return createUserWithEmailAndPassword(this.auth, email, password);
   }
 
-  signInWithGoogle(): Promise<any> {
-    const provider = new GoogleAuthProvider();
-    return signInWithPopup(this.auth, provider);
-  }
-
   signOut(): Promise<void> {
     return signOut(this.auth).then(() => {
-      // Po odhlášení přesměrujeme na login
       this.router.navigate(['/login']);
     });
   }
+  async refreshCurrentUser(): Promise<void> {
+    const user = this.auth.currentUser;
+    if (user) {
+      await user.reload();
+      this.userSubject.next(user as User);
+    }
+  }
 
-  isAuthenticated(): Observable<boolean> {
-    return this.user$.pipe(map(u => !!u));
+  setCurrentUserDisplayName(displayName: string): void {
+    const user = this.userSubject.value;
+    if (user) {
+      (user as any).displayName = displayName;
+      this.userSubject.next(user);
+    }
   }
 }

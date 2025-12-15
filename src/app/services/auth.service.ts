@@ -1,8 +1,8 @@
 import { Injectable, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { Auth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, authState, User } from '@angular/fire/auth';
-import { Observable, BehaviorSubject } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable, BehaviorSubject, firstValueFrom } from 'rxjs';
+import { filter, map, take } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -53,5 +53,20 @@ export class AuthService {
       (user as any).displayName = displayName;
       this.userSubject.next(user);
     }
+  }
+
+  async signInAndWaitForUser(email: string, password: string): Promise<User> {
+    // Provede standardní přihlášení
+    await this.signInWithEmail(email, password);
+
+    // Počká na první nenull user z user$
+    const user = await firstValueFrom(
+      this.user$.pipe(
+        filter((u): u is User => !!u),
+        take(1)
+      )
+    );
+
+    return user;
   }
 }

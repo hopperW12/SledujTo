@@ -84,8 +84,8 @@ export class LoginPage {
     this.loading = true;
     const { email, password } = this.form.value;
     try {
-      await this.auth.signInWithEmail(email!, password!);
-      this.router.navigate(['/']);
+      await this.auth.signInAndWaitForUser(email!, password!);
+      await this.router.navigate(['/']);
     } catch (e: any) {
       const code = e?.code as string | undefined;
       this.errorMessage = this.mapFirebaseError(code) || e.message || 'Chyba při přihlášení.';
